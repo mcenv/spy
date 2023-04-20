@@ -1,4 +1,4 @@
-package spy;
+package dev.mcenv.spy;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;

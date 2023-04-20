@@ -1,4 +1,4 @@
-package spy;
+package dev.mcenv.spy;
 
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ public final class Spy {
     final var type = register.getName().replace('.', '/');
     final var classpath = System.getProperty("java.class.path");
     final var command = new ArrayList<String>();
-    Collections.addAll(command, java, "-javaagent:" + javaagent + "=" + type, "-cp", classpath, "spy.Fork");
+    Collections.addAll(command, java, "-javaagent:" + javaagent + "=" + type, "-cp", classpath, Fork.class.getName());
     Collections.addAll(command, args);
     return new ProcessBuilder(command).inheritIO().start().waitFor();
   }

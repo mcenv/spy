@@ -1,4 +1,4 @@
-package spy;
+package dev.mcenv.spy;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;

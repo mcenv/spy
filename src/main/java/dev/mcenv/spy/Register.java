@@ -1,4 +1,4 @@
-package spy;
+package dev.mcenv.spy;
 
 import com.mojang.brigadier.CommandDispatcher;
 
