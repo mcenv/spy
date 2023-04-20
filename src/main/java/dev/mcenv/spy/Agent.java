@@ -101,7 +101,7 @@ public final class Agent {
               visitInsn(DUP);
               visitMethodInsn(INVOKESPECIAL, register, "<init>", "()V", false);
               visitVarInsn(ALOAD, 0);
-              visitMethodInsn(INVOKEVIRTUAL, register, "apply", "(Lcom/mojang/brigadier/CommandDispatcher;)V", false);
+              visitMethodInsn(INVOKEVIRTUAL, register, "register", "(Lcom/mojang/brigadier/CommandDispatcher;)V", false);
             }
             super.visitInsn(opcode);
           }
