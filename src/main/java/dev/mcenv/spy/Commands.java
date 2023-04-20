@@ -3,6 +3,6 @@ package dev.mcenv.spy;
 import com.mojang.brigadier.CommandDispatcher;
 
 @FunctionalInterface
-public interface Register {
-  void apply(final CommandDispatcher<Object> dispatcher);
+public interface Commands {
+  void register(final CommandDispatcher<Object> dispatcher);
 }
