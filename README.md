@@ -4,4 +4,30 @@
 
 <samp>spy</samp> is a highly-compatible code injector for Minecraft: Java Edition[^1].
 
+## Example
+
+The following code launches the `server.jar` in the current directory with the `nogui` option passed and the `spy` command registered:
+
+```java
+import dev.mcenv.spy.*;
+
+import static com.mojang.brigadier.builder.LiteralArgumentBuilder.literal;
+
+public final class Main {
+  public static void main(String[] args) {
+    Spy.execute(SpyRegister.class, "nogui");
+  }
+
+  public final static class SpyRegister implements Register {
+    @Override
+    public void apply(final CommandDispatcher<Object> dispatcher) {
+      dispatcher.register(
+        literal("spy")
+          .executes(c -> 0)
+      );
+    }
+  }
+}
+```
+
 [^1]: NOT OFFICIAL MINECRAFT PRODUCT. NOT APPROVED BY OR ASSOCIATED WITH MOJANG.
