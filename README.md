@@ -15,7 +15,7 @@ import static com.mojang.brigadier.builder.LiteralArgumentBuilder.literal;
 
 public final class Main {
   public static void main(final String[] args) {
-    Spy.execute(SpyCommands.class, "nogui");
+    Spy.launch(SpyCommands.class, "nogui");
   }
 
   public final static class SpyCommands implements Commands {
