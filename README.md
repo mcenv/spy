@@ -14,13 +14,13 @@ import dev.mcenv.spy.*;
 import static com.mojang.brigadier.builder.LiteralArgumentBuilder.literal;
 
 public final class Main {
-  public static void main(String[] args) {
-    Spy.execute(SpyRegister.class, "nogui");
+  public static void main(final String[] args) {
+    Spy.execute(SpyCommands.class, "nogui");
   }
 
-  public final static class SpyRegister implements Register {
+  public final static class SpyCommands implements Commands {
     @Override
-    public void apply(final CommandDispatcher<Object> dispatcher) {
+    public void register(final CommandDispatcher<Object> dispatcher) {
       dispatcher.register(
         literal("spy")
           .executes(c -> 0)
