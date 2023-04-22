@@ -14,7 +14,7 @@ public final class Fork {
         Class.forName(
           "net.minecraft.bundler.Main",
           true,
-          new URLClassLoader(new URL[]{Paths.get("server.jar").toUri().toURL()})
+          new URLClassLoader(new URL[]{Paths.get(System.getProperty("spy.server")).toUri().toURL()})
         ),
         "main",
         MethodType.methodType(Void.TYPE, String[].class)

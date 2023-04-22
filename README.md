@@ -6,16 +6,16 @@
 
 ## Example
 
-The following code launches the `server.jar` in the current directory with the `nogui` option passed and the `spy` command registered:
+The following code launches the `server.jar` with the `nogui` option passed and the `spy` command registered:
 
 ```java
 import dev.mcenv.spy.*;
-
+import java.nio.file.Paths;
 import static com.mojang.brigadier.builder.LiteralArgumentBuilder.literal;
 
 public final class Main {
   public static void main(final String[] args) {
-    Spy.launch(SpyCommands.class, "nogui");
+    Spy.launch(Paths.get("server.jar"), SpyCommands.class, "nogui");
   }
 
   public final static class SpyCommands implements Commands {
