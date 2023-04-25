@@ -16,13 +16,15 @@ The following code launches the `server.jar` with the `nogui` option passed and 
 ```java
 import dev.mcenv.spy.*;
 
+import java.io.IOException;
 import java.nio.file.Paths;
 
 import static com.mojang.brigadier.builder.LiteralArgumentBuilder.literal;
 
 public final class Main {
-  public static void main(final String[] args) {
-    Spy.launch(Paths.get("server.jar"), SpyCommands.class, "nogui");
+  public static void main(final String[] args) throws IOException, InterruptedException {
+    final Process process = Spy.launch(Paths.get("server.jar"), MyCommands.class, "nogui");
+    process.waitFor();
   }
 
   public final static class SpyCommands implements Commands {
