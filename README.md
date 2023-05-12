@@ -28,7 +28,7 @@ import java.nio.file.Paths;
 import static com.mojang.brigadier.builder.LiteralArgumentBuilder.literal;
 
 public class Main {
-  public static void main(String[] args) throws IOException, InterruptedException {
+  public static void main(final String[] args) throws IOException, InterruptedException {
     final ProcessBuilder launcher = Spy.create(
       Paths.get("server.jar"),
       MyCommands.class,
