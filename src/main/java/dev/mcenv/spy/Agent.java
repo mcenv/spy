@@ -73,14 +73,17 @@ public final class Agent {
   }
 
   private static final class CommandInjector extends ClassVisitor {
-    private final String register;
+    private final String commands;
+    private final String args;
 
     public CommandInjector(
       final ClassVisitor classVisitor,
-      final String register
+      final String rawArgs
     ) {
       super(ASM9, classVisitor);
-      this.register = register;
+      final var strings = rawArgs.split(",", 2);
+      this.commands = strings[0];
+      this.args = strings.length > 1 ? strings[1] : null;
     }
 
     @Override
@@ -97,11 +100,16 @@ public final class Agent {
           @Override
           public void visitInsn(final int opcode) {
             if (opcode == RETURN) {
-              visitTypeInsn(NEW, register);
+              visitTypeInsn(NEW, commands);
               visitInsn(DUP);
-              visitMethodInsn(INVOKESPECIAL, register, "<init>", "()V", false);
+              visitMethodInsn(INVOKESPECIAL, commands, "<init>", "()V", false);
               visitVarInsn(ALOAD, 0);
-              visitMethodInsn(INVOKEVIRTUAL, register, "register", "(Lcom/mojang/brigadier/CommandDispatcher;)V", false);
+              if (args == null) {
+                visitInsn(ACONST_NULL);
+              } else {
+                visitLdcInsn(args);
+              }
+              visitMethodInsn(INVOKEVIRTUAL, commands, "register", "(Lcom/mojang/brigadier/CommandDispatcher;Ljava/lang/String;)V", false);
             }
             super.visitInsn(opcode);
           }
