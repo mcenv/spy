@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public final class Spy {
-  public static ProcessBuilder launch(
+  public static ProcessBuilder create(
     final Path server,
     final Class<?> commands,
     final String args,
@@ -23,10 +23,10 @@ public final class Spy {
     }
     final var type = commands.getName().replace('.', '/');
     final var classpath = System.getProperty("java.class.path");
-    final var command = new ArrayList<String>();
+    final var command = new ArrayList<String>(mcArgs.length + jvmArgs.length + 6);
+    command.add(java);
     Collections.addAll(command, jvmArgs);
     Collections.addAll(command,
-      java,
       "-javaagent:" + javaagent + "=" + type + (args == null ? "" : ("," + args)),
       "-Dspy.server=" + server,
       "-cp",
