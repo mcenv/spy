@@ -11,9 +11,15 @@
 
 ## Example
 
-The following code launches the `server.jar` with the `nogui` option passed and the `spy` command registered:
+The following code launches the `server.jar`
+
+- With the `spy` commands registered
+- With the `Hello from spy!` arguments passed
+- With the `nogui` Minecraft option passed
+- With the `-Xms2G` and `-Xmx2G` JVM options passed
 
 ```java
+import com.mojang.brigadier.CommandDispatcher;
 import dev.mcenv.spy.*;
 
 import java.io.IOException;
@@ -21,18 +27,27 @@ import java.nio.file.Paths;
 
 import static com.mojang.brigadier.builder.LiteralArgumentBuilder.literal;
 
-public final class Main {
-  public static void main(final String[] args) throws IOException, InterruptedException {
-    final Process process = Spy.launch(Paths.get("server.jar"), MyCommands.class, "nogui");
-    process.waitFor();
+public class Main {
+  public static void main(String[] args) throws IOException, InterruptedException {
+    final ProcessBuilder launcher = Spy.create(
+      Paths.get("server.jar"),
+      MyCommands.class,
+      "Hello from spy!",
+      new String[]{"nogui"},
+      new String[]{"-Xms2G", "-Xmx2G"}
+    );
+    launcher.inheritIO().start().waitFor();
   }
 
-  public final static class SpyCommands implements Commands {
+  public static final class MyCommands implements Commands {
     @Override
-    public void register(final CommandDispatcher<Object> dispatcher) {
+    public void register(final CommandDispatcher<Object> dispatcher, final String args) {
       dispatcher.register(
         literal("spy")
-          .executes(c -> 0)
+          .executes(c -> {
+            System.out.println(args); // Hello from spy!
+            return 0;
+          })
       );
     }
   }
