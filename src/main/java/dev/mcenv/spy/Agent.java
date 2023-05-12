@@ -12,7 +12,7 @@ import java.util.function.Function;
 
 import static org.objectweb.asm.Opcodes.*;
 
-public final class Agent {
+final class Agent {
   public static void premain(
     final String args,
     final Instrumentation instrumentation
