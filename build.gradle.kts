@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "dev.mcenv"
-version = "0.4.0"
+version = "0.5.0"
 
 repositories {
   mavenCentral()
@@ -12,7 +12,7 @@ repositories {
 }
 
 dependencies {
-  api("com.mojang:brigadier:1.1.8")
+  compileOnlyApi("com.mojang:brigadier:1.1.8")
   implementation("org.ow2.asm:asm:9.5")
 }
 
