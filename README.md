@@ -2,12 +2,12 @@
 
 [![test](https://github.com/mcenv/spy/actions/workflows/test.yml/badge.svg)](https://github.com/mcenv/spy/actions/workflows/test.yml)
 
-<samp>spy</samp> is a highly-compatible code injector for Minecraft: Java Edition[^1].
+<samp>spy</samp> is a highly-compatible command injector for Minecraft: Java Edition[^1].
 
 ## Features
 
 - Almost no dependency on the Minecraft core code[^2]
-- Code injection through commands via [brigadier](https://github.com/Mojang/brigadier)
+- Command injection via [brigadier](https://github.com/Mojang/brigadier)
 
 ## Example
 
