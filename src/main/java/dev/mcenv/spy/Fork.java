@@ -1,5 +1,7 @@
 package dev.mcenv.spy;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.net.URL;
@@ -7,7 +9,9 @@ import java.net.URLClassLoader;
 import java.nio.file.Paths;
 
 final class Fork {
-  public static void main(final String[] args) throws Throwable {
+  public static void main(
+    final @NotNull String @NotNull [] args
+  ) throws Throwable {
     MethodHandles
       .lookup()
       .findStatic(

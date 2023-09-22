@@ -1,5 +1,8 @@
 package dev.mcenv.spy;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
@@ -27,14 +30,14 @@ import static org.objectweb.asm.Opcodes.*;
 
 final class Agent {
   public static void premain(
-    final String args,
-    final Instrumentation instrumentation
+    final @NotNull String args,
+    final @NotNull Instrumentation instrumentation
   ) throws IOException {
     instrumentation.appendToSystemClassLoaderSearch(getOrExtractBrigadier());
     instrumentation.addTransformer(new ClassFileTransformer() {
-      private static byte[] transform(
-        final byte[] classfileBuffer,
-        final Function<ClassVisitor, ClassVisitor> createClassVisitor
+      private static byte @NotNull [] transform(
+        final byte @NotNull [] classfileBuffer,
+        final @NotNull Function<@NotNull ClassVisitor, @NotNull ClassVisitor> createClassVisitor
       ) {
         final var classReader = new ClassReader(classfileBuffer);
         final var classWriter = new ClassWriter(classReader, 0);
@@ -46,20 +49,23 @@ final class Agent {
       @Override
       public byte[] transform(
         final ClassLoader loader,
-        final String className, Class<?> classBeingRedefined,
+        final @NotNull String className,
+        final Class<?> classBeingRedefined,
         final ProtectionDomain protectionDomain,
-        final byte[] classfileBuffer
+        final byte @NotNull [] classfileBuffer
       ) {
         return switch (className) {
           case "net/minecraft/server/MinecraftServer" -> transform(classfileBuffer, ModNameTransformer::new);
-          case "com/mojang/brigadier/CommandDispatcher" -> transform(classfileBuffer, v -> new CommandInjector(v, args));
+          case "com/mojang/brigadier/CommandDispatcher" ->
+            transform(classfileBuffer, v -> new CommandInjector(v, args));
           default -> null;
         };
       }
     });
   }
 
-  private static JarFile getOrExtractBrigadier() throws IOException {
+  @Contract(" -> new")
+  private static @NotNull JarFile getOrExtractBrigadier() throws IOException {
     try (final var server = new JarFile(System.getProperty("spy.server"))) {
       try (final var libraries = new BufferedInputStream(server.getInputStream(server.getEntry("META-INF/libraries.list")))) {
         final var entries = new String(libraries.readAllBytes(), StandardCharsets.UTF_8).split("\n");
@@ -87,8 +93,8 @@ final class Agent {
   }
 
   private static boolean checkIntegrity(
-    final Path file,
-    final String expectedHash
+    final @NotNull Path file,
+    final @NotNull String expectedHash
   ) throws IOException {
     final MessageDigest digest;
     try {
@@ -109,8 +115,8 @@ final class Agent {
     }
   }
 
-  private static String byteToHex(
-    final byte[] bytes
+  private static @NotNull String byteToHex(
+    final byte @NotNull [] bytes
   ) {
     final var result = new StringBuilder(bytes.length * 2);
     for (final var b : bytes) {
@@ -121,11 +127,14 @@ final class Agent {
   }
 
   private record FileEntry(
-    String hash,
-    String id,
-    String path
+    @NotNull String hash,
+    @NotNull String id,
+    @NotNull String path
   ) {
-    public static FileEntry parse(final String string) {
+    @Contract("_ -> new")
+    public static @NotNull FileEntry parse(
+      final @NotNull String string
+    ) {
       final var fields = string.split("\t");
       if (fields.length != 3) {
         throw new IllegalStateException("Malformed library entry: " + string);
@@ -136,23 +145,27 @@ final class Agent {
   }
 
   private static final class ModNameTransformer extends ClassVisitor {
-    public ModNameTransformer(final ClassVisitor classVisitor) {
+    public ModNameTransformer(
+      final @NotNull ClassVisitor classVisitor
+    ) {
       super(ASM9, classVisitor);
     }
 
     @Override
     public MethodVisitor visitMethod(
       final int access,
-      final String name,
-      final String descriptor,
-      final String signature,
-      final String[] exceptions
+      final @NotNull String name,
+      final @NotNull String descriptor,
+      final @Nullable String signature,
+      final @Nullable String @NotNull [] exceptions
     ) {
       final var parent = super.visitMethod(access, name, descriptor, signature, exceptions);
       if (name.equals("getServerModName") && descriptor.equals("()Ljava/lang/String;")) {
         return new MethodVisitor(ASM9, parent) {
           @Override
-          public void visitLdcInsn(final Object value) {
+          public void visitLdcInsn(
+            final @NotNull Object value
+          ) {
             super.visitLdcInsn("spy");
           }
         };
@@ -163,12 +176,12 @@ final class Agent {
   }
 
   private static final class CommandInjector extends ClassVisitor {
-    private final String commands;
-    private final String args;
+    private final @NotNull String commands;
+    private final @Nullable String args;
 
     public CommandInjector(
-      final ClassVisitor classVisitor,
-      final String rawArgs
+      final @NotNull ClassVisitor classVisitor,
+      final @NotNull String rawArgs
     ) {
       super(ASM9, classVisitor);
       final var strings = rawArgs.split(",", 2);
@@ -179,16 +192,18 @@ final class Agent {
     @Override
     public MethodVisitor visitMethod(
       final int access,
-      final String name,
-      final String descriptor,
-      final String signature,
-      final String[] exceptions
+      final @NotNull String name,
+      final @NotNull String descriptor,
+      final @Nullable String signature,
+      final @Nullable String @NotNull [] exceptions
     ) {
       final var parent = super.visitMethod(access, name, descriptor, signature, exceptions);
       if (name.equals("<init>") && descriptor.equals("(Lcom/mojang/brigadier/tree/RootCommandNode;)V")) {
         return new MethodVisitor(ASM9, parent) {
           @Override
-          public void visitInsn(final int opcode) {
+          public void visitInsn(
+            final int opcode
+          ) {
             if (opcode == RETURN) {
               visitTypeInsn(NEW, commands);
               visitInsn(DUP);
