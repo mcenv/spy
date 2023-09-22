@@ -16,8 +16,8 @@ public final class Spy {
     final @NotNull Path server,
     final @NotNull Class<?> commands,
     final @Nullable String args,
-    final @NotNull String @NotNull [] mcArgs,
-    final @NotNull String @NotNull [] jvmArgs
+    final @NotNull String @Nullable [] mcArgs,
+    final @NotNull String @Nullable [] jvmArgs
   ) {
     final var java = ProcessHandle.current().info().command().orElseThrow();
     final String javaagent;
@@ -28,9 +28,11 @@ public final class Spy {
     }
     final var type = commands.getName().replace('.', '/');
     final var classpath = System.getProperty("java.class.path");
-    final var command = new ArrayList<String>(6 + mcArgs.length + jvmArgs.length);
+    final var command = new ArrayList<String>(6 + (mcArgs == null ? 0 : mcArgs.length) + (jvmArgs == null ? 0 : jvmArgs.length));
     command.add(java);
-    Collections.addAll(command, jvmArgs);
+    if (jvmArgs != null) {
+      Collections.addAll(command, jvmArgs);
+    }
     Collections.addAll(command,
       "-javaagent:" + javaagent + "=" + type + (args == null ? "" : ("," + args)),
       "-Dspy.server=" + server,
@@ -38,7 +40,9 @@ public final class Spy {
       classpath,
       Fork.class.getName()
     );
-    Collections.addAll(command, mcArgs);
+    if (mcArgs != null) {
+      Collections.addAll(command, mcArgs);
+    }
     return new ProcessBuilder(command);
   }
 }
