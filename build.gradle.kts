@@ -20,7 +20,7 @@ repositories {
 dependencies {
   compileOnly("org.jetbrains:annotations:24.0.1")
   compileOnlyApi("com.mojang:brigadier:1.1.8")
-  implementation("org.ow2.asm:asm:9.5")
+  implementation("org.ow2.asm:asm:9.6")
 }
 
 tasks.jar {
