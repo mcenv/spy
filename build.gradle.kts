@@ -19,7 +19,7 @@ repositories {
 
 dependencies {
   compileOnly("org.jetbrains:annotations:24.0.1")
-  compileOnlyApi("com.mojang:brigadier:1.1.8")
+  compileOnlyApi("com.mojang:brigadier:1.2.9")
   implementation("org.ow2.asm:asm:9.6")
 }
 
