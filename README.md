@@ -54,5 +54,10 @@ public class Main {
 }
 ```
 
+## Requirements
+
+- Minecraft 23w44a+
+- Java 17+
+
 [^1]: NOT OFFICIAL MINECRAFT PRODUCT. NOT APPROVED BY OR ASSOCIATED WITH MOJANG.
 [^2]: The only exception is the dependency on `net.minecraft.server.MinecraftServer#getServerModName`. However, since this method is not obfuscated, it is likely to be a highly-compatible method provided for mod developers.
